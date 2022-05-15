@@ -1,0 +1,54 @@
+<button class="modal-close" (click)="closeModal('donate-modal');"></button>
+<div class="payment-methods">
+    <h4>Payment Method</h4>
+    <p>Choose a payment option below</p>
+    <form [formGroup]="methods">
+        <!-- <div class="method">
+            <div class="method-image" (click)="methods.setValue({method: 'openCollective'})"
+                [ngStyle]="{'border-color': methods.get('method')?.value === 'openCollective' ? '#4A93C8' : '#343539', 'opacity': methods.get('method')?.value === 'openCollective' ? '1' : '0.5'}">
+                <img src="assets/icons/opencollective.svg" alt="">
+            </div>
+        </div> -->
+        <div class="method">
+            <div class="method-image" (click)="methods.setValue({method: 'card'})"
+                [ngStyle]="{'border-color': methods.get('method')?.value === 'card' ? '#4A93C8' : '#343539', 'opacity': methods.get('method')?.value === 'card' ? '1' : '0.5'}">
+                <img src="assets/icons/cardIcon.svg" alt="">
+            </div>
+        </div>
+
+        <div class="method">
+            <div class="method-image" (click)="methods.setValue({method: 'usdt'})"
+                [ngStyle]="{'border-color': methods.get('method')?.value === 'usdt' ? '#4A93C8' : '#343539', 'opacity': methods.get('method')?.value === 'usdt' ? '1' : '0.5'}">
+                <img src="assets/icons/usdtIcon.svg" alt="">
+
+            </div>
+        </div>
+    </form>
+
+</div>
+<div class="pm-form" *ngIf="methods.get('method')?.value === 'usdt'">
+    <form [formGroup]="paymentDataForm">
+
+        <label for="address">Receiver address</label>
+        <input id="address" type="text" formControlName="address">
+
+        <label for="amount">Amount</label>
+        <input id="amount" type="text" formControlName="amount" currencyMask
+            [options]="{ prefix: 'USDT ', thousands: '.', align: 'left' }">
+        <div *ngIf="error" class="errors">
+            <span>{{error}}</span>
+        </div>
+
+        <button (click)="startTransaction($event)" [disabled]="isClicked">Continue</button>
+    </form>
+</div>
+<div class="pm-form" *ngIf="methods.get('method')?.value === 'card'">
+    <form [formGroup]="paymentDataForm">
+        <label for="amount">Donate the amount</label>
+        <input id="amount" type="text" formControlName="amount" currencyMask
+            [options]="{ prefix: '$ ', thousands: '.', decimal: ',' , align: 'left', precision: 0 }"
+            [ngStyle]="{border: error ? '1px solid #9B0505': ''}">
+        <span *ngIf="error">{{error}}</span>
+        <button (click)="createPayment()" [disabled]="isClicked">Continue</button>
+    </form>
+</div>
